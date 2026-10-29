@@ -1,0 +1,17 @@
+{
+  "format": 2,
+  "template": "campaign",
+  "sourceCommit": "34036f3e228ea36591a7fbc5d9c43885551efb15",
+  "dirty": false,
+  "packages": [
+    {
+      "name": "@domino-sdk/relay",
+      "version": "1.66.1"
+    },
+    {
+      "name": "@domino-sdk/relay-cli",
+      "version": "1.66.1"
+    }
+  ],
+  "lockfileSha256": "2c43ecf21bd4d4f836869ba5bac09dc81a1bd72302dc9b926c4402db8c71a8a0"
+}

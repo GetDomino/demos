@@ -1,0 +1,38 @@
+{
+  "apiUrl": "https://relay.domino.run",
+  "organization": "local",
+  "project": "campaign",
+  "environment": "test",
+  "quests": [],
+  "questTypes": [],
+  "collections": [
+    {
+      "title": "Explore the campaign",
+      "key": "activities"
+    }
+  ],
+  "supportedInteractions": ["photo"],
+  "app": {
+    "kind": "worker",
+    "routing": "transparent",
+    "directory": "dist/server",
+    "devScript": "dev",
+    "checkScript": "check",
+    "buildScript": "build",
+    "main": "index.js",
+    "assetsDirectory": "dist/client",
+    "compatibilityDate": "2026-09-16",
+    "runWorkerFirst": true
+  },
+  "discover": {
+    "quests": ["quests/**/*.quest.ts"],
+    "questTypes": ["quests/**/*.quest-type.ts"],
+    "provider": "workers-ai"
+  },
+  "pointLedgers": [
+    {
+      "entry": "ledgers.ts",
+      "exportName": "pointsLedger"
+    }
+  ]
+}

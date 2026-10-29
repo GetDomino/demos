@@ -1,0 +1,364 @@
+@import "tailwindcss";
+@import "@fontsource-variable/geist/index.css";
+@import "@fontsource-variable/geist-mono/index.css";
+
+/*
+ * Photo booth: a sunny page, ink outlines with hard shadows, stickers, and a
+ * Polaroid that develops after a camera flash. Components use the tokens
+ * below; dark mode follows the system setting.
+ */
+:root {
+  --sunny: #ffd23f;
+  --ink: #1b1029;
+  --cream: #fffdf7;
+  --grape: #6d4aff;
+  --grape-pale: #c8bbff;
+  --tangerine: #ff8a3d;
+  --red: #e5484d;
+  --mint: #22c99a;
+  --pink: #ff6fae;
+  --warm-grey: #e6dfd4;
+
+  --page: var(--sunny);
+  --text: var(--ink);
+  --card: var(--cream);
+  --line: var(--ink);
+  --shadow: var(--ink);
+  --score-bg: var(--ink);
+  --score-fg: var(--sunny);
+  --score-line: var(--ink);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #150d20;
+    --text: var(--cream);
+    --card: #231833;
+    --line: var(--cream);
+    --shadow: var(--grape);
+    --score-bg: var(--sunny);
+    --score-fg: var(--ink);
+    --score-line: var(--cream);
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --color-page: var(--page);
+  --color-text: var(--text);
+  --color-card: var(--card);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-cream: var(--cream);
+  --color-sunny: var(--sunny);
+  --color-grape: var(--grape);
+  --color-tangerine: var(--tangerine);
+  --color-red: var(--red);
+  --color-mint: var(--mint);
+  --color-pink: var(--pink);
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
+}
+
+@layer base {
+  /* A phone must never scroll sideways, mid-animation included. */
+  html,
+  body {
+    overflow-x: clip;
+  }
+  html {
+    background: var(--page);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
+  }
+  button:not(:disabled),
+  label[for],
+  .polaroid-pick {
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  .card {
+    position: relative;
+    background: var(--card);
+    border: 2px solid var(--line);
+    border-radius: 16px;
+    box-shadow: 5px 5px 0 var(--shadow);
+  }
+
+  .headline {
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .label-caps {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .btn-primary {
+    display: flex;
+    width: 100%;
+    height: 56px;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    background: var(--grape);
+    color: #fff;
+    font-size: 17px;
+    font-weight: 800;
+    box-shadow: 4px 4px 0 var(--ink);
+    transition:
+      transform 80ms ease-out,
+      box-shadow 80ms ease-out;
+  }
+  .btn-primary:active:not(:disabled) {
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 var(--ink);
+  }
+  .btn-primary:disabled {
+    background: var(--grape-pale);
+    border-color: var(--grape-pale);
+    box-shadow: none;
+  }
+  .btn-secondary {
+    display: flex;
+    width: 100%;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--line);
+    border-radius: 14px;
+    background: var(--card);
+    color: var(--text);
+    font-weight: 800;
+  }
+  .btn-secondary:disabled {
+    opacity: 0.5;
+  }
+  .btn-primary:focus-visible,
+  .btn-secondary:focus-visible,
+  .link:focus-visible,
+  .field:focus-visible {
+    outline: 3px solid var(--grape);
+    outline-offset: 2px;
+  }
+
+  .field {
+    display: block;
+    width: 100%;
+    height: 52px;
+    border: 2px solid var(--line);
+    border-radius: 12px;
+    background: #fff;
+    color: var(--ink);
+    padding: 0 14px;
+    font-size: 17px;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    border: 2px solid var(--ink);
+    border-radius: 999px;
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .sticker {
+    display: inline-flex;
+    align-items: center;
+    border: 2px solid var(--ink);
+    color: var(--ink);
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  /* The Polaroid: a thick white frame with a bigger bottom strip. */
+  .polaroid {
+    position: relative;
+    display: block;
+    width: min(272px, 100%);
+    margin: 0 auto;
+    background: #fff;
+    padding: 12px 12px 0;
+    border-radius: 3px;
+    color: var(--ink);
+    box-shadow:
+      0 14px 28px rgb(27 16 41 / 0.22),
+      0 3px 6px rgb(27 16 41 / 0.16);
+    transform: rotate(var(--tilt, -2deg));
+    transition: transform 300ms ease;
+  }
+  .polaroid:has(input:focus-visible) {
+    outline: 3px solid var(--grape);
+    outline-offset: 4px;
+  }
+  .polaroid-photo {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: var(--warm-grey);
+  }
+  .polaroid-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .polaroid-caption {
+    display: flex;
+    min-height: 52px;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 8px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    text-align: center;
+  }
+  /* The sticker row only takes room once the stickers appear. */
+  .sticker-row {
+    display: grid;
+    grid-template-rows: 1fr;
+    animation: row-open 260ms ease-out both;
+    animation-delay: var(--row-delay, 0ms);
+  }
+  .sticker-row > div {
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 999px;
+    animation: spin 700ms linear infinite;
+  }
+
+  /* Checking: the photo greys, blurs and pulses like a print developing. */
+  .is-checking img {
+    filter: grayscale(1) blur(4px);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+
+  /* The celebration, once per accepted attempt. */
+  .flash {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background: #fff;
+    pointer-events: none;
+    animation: flash 650ms ease-out both;
+  }
+  .polaroid.drop {
+    animation: drop 760ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+  .develop img {
+    animation: develop 1400ms ease-out both;
+    animation-delay: 250ms;
+  }
+  .slap {
+    animation: slap 320ms cubic-bezier(0.34, 1.7, 0.64, 1) both;
+    animation-delay: var(--delay, 0ms);
+  }
+  .pop {
+    animation: pop 380ms cubic-bezier(0.34, 1.7, 0.64, 1) both;
+    animation-delay: var(--delay, 0ms);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes pulse {
+  50% {
+    opacity: 0.55;
+  }
+}
+@keyframes flash {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes drop {
+  from {
+    opacity: 0;
+    transform: translateY(-48px) rotate(-7deg) scale(1.03);
+  }
+  40% {
+    opacity: 1;
+  }
+  to {
+    transform: rotate(-3deg);
+  }
+}
+@keyframes develop {
+  from {
+    filter: brightness(1.7) saturate(0) contrast(0.55) sepia(0.35);
+  }
+  to {
+    filter: none;
+  }
+}
+@keyframes slap {
+  from {
+    opacity: 0;
+    transform: rotate(var(--rot, 0deg)) scale(1.5);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(var(--rot, 0deg)) scale(1);
+  }
+}
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes row-open {
+  from {
+    grid-template-rows: 0fr;
+  }
+  to {
+    grid-template-rows: 1fr;
+  }
+}
+
+/* Reduced motion: every animation becomes its final still frame. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-delay: 0s !important;
+    animation-duration: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0s !important;
+  }
+  .is-checking img,
+  .spinner {
+    animation: none !important;
+  }
+}
